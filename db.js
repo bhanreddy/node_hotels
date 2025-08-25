@@ -15,5 +15,5 @@ db.on('disconnected',()=>{
 db.on('error',()=>{
     console.log("Internal server error !! Unable to connect database server")
 });
-
+// export the database connection
 module.exports = db;
