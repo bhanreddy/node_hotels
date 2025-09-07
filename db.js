@@ -1,19 +1,26 @@
 const mongoose = require('mongoose');
-const mongoUrl = "mongodb://localhost:27017/hotel";
+require('dotenv').config();
 
-mongoose.connect(mongoUrl);
+//const mongoUrl = process.env.DB_URL_LOCAL;
+const mongoUrl = process.env.DB_URL;
+
+// connect to MongoDB Atlas
+mongoose.connect(mongoUrl, {
+  serverSelectionTimeoutMS: 10000, // wait 10s before failing
+});
 
 const db = mongoose.connection;
 
-db.on('connected',()=>{
-    console.log("Database server is connected successfully")
+db.on('connected', () => {
+    console.log("✅ Database server is connected successfully");
 });
-db.on('disconnected',()=>{
-    console.log("Database server got disconnected as no CRUD operations are gonna save");
 
-})
-db.on('error',()=>{
-    console.log("Internal server error !! Unable to connect database server")
+db.on('disconnected', () => {
+    console.log("⚠️ Database server got disconnected");
 });
-// export the database connection
+
+db.on('error', (err) => {
+    console.error("❌ Internal server error !! Unable to connect database server", err);
+});
+
 module.exports = db;
